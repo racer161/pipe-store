@@ -1,20 +1,24 @@
-use ot_core::peer::Peer;
+use ot_core::{doc_state, operation};
 use std::fs::File;
 use std::path::Path;
 use std::io;
+use ot_user::OTUser;
 
 
-pub struct Document
+pub struct Document <'t>
 {
-    ot_document : Peer, 
-    fileBuffer : File
+    //TODO: PUT AN ARC ON THIS BITCH FOR SOCKET THREADING!
+    ot_document : doc_state::DocState, 
+    file_buffer : File,
+    users : Vec<&'t OTUser<'t>>
+    //TODO: PERMISSIONS! SHARING! 
 }
 
-impl Document
+impl<'t> Document <'t>
 {
     //this path doesn't exist and 
     //we want to create a new doc for it
-    fn new(p : &Path) -> io::Result<Document>
+    fn new(p : &Path) -> io::Result<Document<'t>>
     {
         match File::create(p)
         {
@@ -22,13 +26,13 @@ impl Document
             {
                 Ok(Document
                 { 
-                    ot_document : Peer::new(),
-                    fileBuffer : buf
+                    ot_document : doc_state::DocState::new_empty(),
+                    file_buffer : buf,
+                    users : Vec::new() 
                 })
             },
             Err(e) => Err(e) 
         }
-        
         
     }
     
@@ -42,8 +46,17 @@ impl Document
     fn from_file(p : &Path)
     {
         
-    
     }
     
+    pub fn create_new_OTUser(&mut self) -> usize
+    {
+        let new_user = OTUser::new(&self.ot_document);
+        self.users.push(new_user);
+        return self.user.len();
+    }
     
+    pub fn add_operation_by_peer_index(&mut self, op : operation::Operation::Operation, peer_index : usize)
+    {
+        self.users[peer_index].merge_op(self.doc, op);
+    }
 }
