@@ -4,4 +4,6 @@ version = "0.1.0"
 authors = ["Ethan Spurlock <ethan@spurlock.io>"]
 
 [dependencies]
-ot_core = { git = "https://github.com/racer161/ot_core.git" }
+ot_core = {path = "../ot_core/"}
+rand = "*"
+serde_json = "*"

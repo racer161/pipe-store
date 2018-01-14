@@ -1,3 +1,3 @@
 extern crate ot_core;
-pub mod ot_doc;
-pub mod ot_user;
+extern crate serde_json;
+pub mod ot_formats;
