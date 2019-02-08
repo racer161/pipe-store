@@ -1,7 +1,6 @@
 #![allow(dead_code)]
-extern crate rand;
-    
-use self::rand::distributions::IndependentSample;
+
+use rand::{thread_rng, Rng};
 use ot_core::operation::Operation;
 use ot_formats::ot_string::test_ot_string;
 use std::char;  
@@ -12,19 +11,17 @@ const MAX_UNICODE_CODE_POINT : u32 = 1114111;
 pub fn rand_insert_op() -> Operation<char>
 {
     //initialize random
-    let mut rng = rand::thread_rng();
+    let mut rng = thread_rng();
     
     //op values
     let test_char = rand_readable_char();
 
-    let test_string_length_range = rand::distributions::Range::new(0, test_ot_string::TEST_SIZE-1);
-    let test_ix = test_string_length_range.ind_sample(&mut rng);
+    let test_ix : usize = rng.gen_range(0, test_ot_string::TEST_SIZE-1);
 
     println!("Index : {}", test_ix);
 
-    let op_val_range = rand::distributions::Range::new(0, u32::max_value());
-    let test_op_id = op_val_range.ind_sample(&mut rng) as usize;
-    let test_user_id = op_val_range.ind_sample(&mut rng) as usize;
+    let test_op_id : usize = rng.gen_range(0, usize::max_value());
+    let test_user_id : usize = rng.gen_range(0, usize::max_value());
 
     Operation::new(true, test_char, test_ix, test_op_id, test_user_id,0)
 }
@@ -33,18 +30,16 @@ pub fn rand_insert_op() -> Operation<char>
 pub fn rand_remove_op() -> Operation<char>
 {
     //initialize random
-    let mut rng = rand::thread_rng();
+    let mut rng = thread_rng();
 
     //op values
     let test_char = rand_readable_char();
 
-    let test_string_length_range = rand::distributions::Range::new(0, test_ot_string::TEST_SIZE-1);
-    let test_ix = test_string_length_range.ind_sample(&mut rng);
+    let test_ix : usize = rng.gen_range(0, test_ot_string::TEST_SIZE-1);
 
-    let op_val_range = rand::distributions::Range::new(0, u32::max_value());
-    let test_op_id = op_val_range.ind_sample(&mut rng) as usize;
-    let test_user_id = op_val_range.ind_sample(&mut rng) as usize;
-
+    let test_op_id : usize = rng.gen_range(0, usize::max_value());
+    let test_user_id : usize = rng.gen_range(0, usize::max_value());
+    
     Operation::new(false, test_char, test_ix, test_op_id, test_user_id,0)
 }
 
@@ -58,10 +53,9 @@ pub fn rand_string(size : usize) -> String
 fn rand_readable_char() -> char
 {
     //initialize random
-    let mut rng = rand::thread_rng();
+    let mut rng = thread_rng();
 
-    let test_char_range = rand::distributions::Range::new(0, 254/*Magic number MAX ASCII*/);
-    let test_char = test_char_range.ind_sample(&mut rng);
+    let test_char : u32 = rng.gen_range(0, 254/*Magic number MAX ASCII*/);
     match char::from_u32(test_char)
     {
         Some(ch) => return ch,
@@ -73,10 +67,9 @@ fn rand_readable_char() -> char
 fn rand_char() -> char
 {
     //initialize random
-    let mut rng = rand::thread_rng();
+    let mut rng = thread_rng();
 
-    let test_char_range = rand::distributions::Range::new(0, MAX_UNICODE_CODE_POINT/*Magic number MAX UNICODE POINT*/);
-    let test_char = test_char_range.ind_sample(&mut rng) as u32;
+    let test_char : u32 = rng.gen_range(0, MAX_UNICODE_CODE_POINT/*Magic number MAX UNICODE POINT*/);
     match char::from_u32(test_char)
     {
         Some(ch) => return ch,

@@ -1,15 +1,28 @@
 mod test_ot_string;
 mod test_string_utils;
 
+use std::collections::BTreeSet;
 use ot_core::doc_state::DocState; 
 
 trait OTString
 {
     fn string(&self ) -> String;
+    fn from_string(start_string : String ) -> DocState<char>;
 }
 
 impl OTString for DocState<char>
 {
+    //custom constructor for charDoc
+    fn from_string(start_string : String ) -> DocState<char>
+    {
+        let doc : DocState<char> = DocState 
+        { 
+            operations : Vec::new(),
+            deletions : BTreeSet::new(),
+            doc_str : doc_str_from_string(start_string)
+        };
+        doc
+    }
     
     fn string(&self ) -> String
     {
@@ -21,8 +34,6 @@ impl OTString for DocState<char>
         
         return return_string;
     }
-    
-    
 }
 
 pub fn doc_str_from_string(start_string : String) -> Vec<char>
